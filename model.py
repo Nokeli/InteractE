@@ -16,8 +16,11 @@ class InteractE(torch.nn.Module):
 	"""
 	def __init__(self, params, chequer_perm):
 		super(InteractE, self).__init__()
-
+		#--perm is Number of Feature rearrangement to use
+		# --num_filt is Number of filters in convolution
+		# 
 		self.p                  = params
+		# p.embed_dim Embedding dimension for entity and relation, ignored if k_h and k_w are set
 		self.ent_embed		= torch.nn.Embedding(self.p.num_ent,   self.p.embed_dim, padding_idx=None); xavier_normal_(self.ent_embed.weight)
 		self.rel_embed		= torch.nn.Embedding(self.p.num_rel*2, self.p.embed_dim, padding_idx=None); xavier_normal_(self.rel_embed.weight)
 		self.bceloss		= torch.nn.BCELoss()
@@ -26,8 +29,9 @@ class InteractE(torch.nn.Module):
 		self.hidden_drop	= torch.nn.Dropout(self.p.hid_drop)
 		self.feature_map_drop	= torch.nn.Dropout2d(self.p.feat_drop)
 		self.bn0		= torch.nn.BatchNorm2d(self.p.perm)
-
+                # Width of the reshaped matrix
 		flat_sz_h 		= self.p.k_h
+		# Height of the reshaped matrix
 		flat_sz_w 		= 2*self.p.k_w
 		self.padding 		= 0
 
